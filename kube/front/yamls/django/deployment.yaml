@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gunicorn
+  namespace: default
+spec:
+  replicas: 3                                           # ReplicaSet 3 - три экземпляра приложения в поде
+  selector:
+    matchLabels:
+      app: gunicorn                                     # под будет построен по шаблону с совпадающим лейблом
+  template:
+    metadata:
+      labels:
+        app: gunicorn                                   # лейбл шаблона
+    spec:
+      volumes:                                          # хранилища
+      - name: media-storage
+        persistentVolumeClaim:                          # запрос на получение хранилища
+          claimName: media-pvc
+      containers:                                        # описание контейнера
+      - name: gunicorn-app
+        image: revolman/kube-django:v3
+        volumeMounts:                                   # подключение запрошенного хранилища
+        - mountPath: "/srv/www/viberr/media"            # точка монтирования
+          name: media-storage                           # имя хранилища
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+        env:                                            # Передача переменных окружения в контейнер
+        - name: "DB_PASSWORD"                           # Безопасная передача пароля БД
+          valueFrom:                                    # Значение из
+            secretKeyRef:                               # Secret
+              name: db-pass                             # ключ 
+              key: password                             # значение (key - тут как значение)
+        envFrom:                                        # Взять остальные переменные из configmap "db_config"
+        - configMapRef:
+            name: db-config
+

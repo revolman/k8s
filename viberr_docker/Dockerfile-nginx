@@ -1,0 +1,7 @@
+FROM nginx:stable 
+
+RUN mkdir -p /usr/share/nginx/html/static
+RUN mkdir -p /usr/share/nginx/html/media
+
+WORKDIR /usr/share/nginx/html
+

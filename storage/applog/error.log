@@ -1,0 +1,17 @@
+[2019-10-14 15:13:52 +0000] [1] [INFO] Starting gunicorn 19.9.0
+[2019-10-14 15:13:52 +0000] [1] [INFO] Listening at: http://0.0.0.0:8000 (1)
+[2019-10-14 15:13:52 +0000] [1] [INFO] Using worker: gevent
+[2019-10-14 15:13:52 +0000] [9] [INFO] Booting worker with pid: 9
+[2019-10-14 15:13:52 +0000] [10] [INFO] Booting worker with pid: 10
+[2019-10-14 15:13:52 +0000] [11] [INFO] Booting worker with pid: 11
+[2019-10-14 15:13:52 +0000] [12] [INFO] Booting worker with pid: 12
+[2019-10-14 15:13:52 +0000] [13] [INFO] Booting worker with pid: 13
+[2019-10-14 15:13:52 +0000] [14] [INFO] Booting worker with pid: 14
+[2019-10-15 06:58:25 +0000] [1] [INFO] Handling signal: term
+[2019-10-15 09:58:25 +0300] [10] [INFO] Worker exiting (pid: 10)
+[2019-10-15 09:58:25 +0300] [14] [INFO] Worker exiting (pid: 14)
+[2019-10-15 09:58:25 +0300] [13] [INFO] Worker exiting (pid: 13)
+[2019-10-15 09:58:25 +0300] [12] [INFO] Worker exiting (pid: 12)
+[2019-10-15 09:58:25 +0300] [9] [INFO] Worker exiting (pid: 9)
+[2019-10-15 09:58:25 +0300] [11] [INFO] Worker exiting (pid: 11)
+[2019-10-15 06:58:26 +0000] [1] [INFO] Shutting down: Master

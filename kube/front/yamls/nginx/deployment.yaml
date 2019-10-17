@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment                                # деплой потложения
+metadata:
+  name: nginx                                   # под будет называть nginx
+  namespace: default
+spec:
+  replicas: 1                                   # в поде будет только одна реплика приложения
+  selector:
+    matchLabels:                                # под будет построен по шаблону с совапдающим лейблом
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx                              # лейбл шаблона
+    spec:
+      volumes:                                  # запрос на получение хранилища
+      - name: media-storage
+        persistentVolumeClaim:                  # заявка
+          claimName: media-pvc                  # имя заявка $kubectl get pvc
+      containers:
+      - name: web-nginx                         # имя контейнера (вроде как DNS-имя)
+        image: revolman/kube-nginx:v3
+        volumeMounts:
+        - mountPath: "/srv/share/nginx/html/media"
+          name: media-storage
+        ports:
+        - containerPort: 80                     # слушает 80 порт
+          protocol: TCP
+

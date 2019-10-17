@@ -1,0 +1,32 @@
+FROM python:3.7.3 as builder
+
+RUN mkdir -p /srv/www/viberr
+COPY ./viberr /srv/www/viberr
+
+WORKDIR /srv/www/viberr
+
+RUN pip install django==2.2.2 && \
+        pip install pytz==2019.1 && \
+        pip install sqlparse==0.3.0 && \
+        pip install gevent && \
+        pip install gunicorn && \
+        pip install mysqlclient && \
+        pip install django-redis && \
+        pip install djangorestframework;
+
+RUN python manage.py collectstatic --noinput
+
+
+FROM nginx:stable 
+
+RUN mkdir -p /usr/share/nginx/html/static
+RUN mkdir -p /usr/share/nginx/html/media
+
+COPY ./kube/front/nginx /etc/nginx
+
+COPY --from=builder /srv/www/viberr/dbdata/static /usr/share/nginx/html/static
+
+WORKDIR /usr/share/nginx/html
+
+CMD ["nginx", "-g", "daemon off;"]
+

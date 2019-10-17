@@ -1,0 +1,78 @@
+version: '3.2'
+
+
+services:
+
+
+  gunicorn:
+    container_name: Gunicorn_Prod
+    build: 
+      context: .
+      dockerfile: ./Dockerfile-app
+    privileged: true
+    volumes:
+      - ../viberr:/srv/www/viberr
+#      - ../viberr/static:/srv/www/viberr/dbdata/static
+      - ../viberr/media:/srv/www/viberr/media
+      - ../storage/applog:/var/log
+    expose:
+      - '8000'
+    command: "gunicorn --access-logfile /var/log/access.log \ 
+                --error-logfile \ 
+                /var/log/error.log -c gunicorn.py Project1.wsgi"
+    networks:
+      - viberr_net
+
+  nginx:
+    container_name: Nginx_Prod
+    build: 
+      context: .
+      dockerfile: ./Dockerfile-nginx
+    depends_on: 
+      - gunicorn
+    volumes:
+      - ../etc/nginx:/etc/nginx
+      - ../viberr/dbdata/static:/usr/share/nginx/html/static
+      - ../viberr/media:/usr/share/nginx/html/media
+      - ../storage/logs:/var/log/nginx
+    expose:
+      - '80'
+    ports:
+      - '8080:80'
+    networks:
+      viberr_net:
+        aliases:
+          - viberr.local 
+
+  mysql:
+    container_name: MySQL_Prod
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpw
+      MYSQL_DATABASE: db 
+      MYSQL_USER: db
+      MYSQL_PASSWORD: dbpw
+    volumes: 
+      - ../storage/mysql:/var/lib/mysql
+      - ../etc/mysql:/etc/mysql/conf.d
+    ports:
+      - '3306:3306'
+    networks:
+      - viberr_net
+
+  adminer:
+    container_name: Adminer_Prod
+    image: adminer
+    ports:
+      - '8011:8080'
+    networks:
+      - viberr_net
+
+
+networks:
+  viberr_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.3.0/24
+
