@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: media-pv
+  name: logs-pv
   labels:
-    name: media-volume
+    name: logs-volume
 spec:
   storageClassName: manual
   capacity:
@@ -11,17 +11,17 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/home/docker/media"
+    path: "/home/docker/logs"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: media-pvc
+  name: logs-pvc
 spec:
   storageClassName: manual
   selector:
     matchLabels:
-      name: media-volume
+      name: logs-volume
   accessModes:
     - ReadWriteOnce
   resources:

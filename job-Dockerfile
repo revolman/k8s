@@ -1,0 +1,19 @@
+FROM python:3.7.3
+
+# Подготовка рабочего пространства
+RUN mkdir -p /srv/www/viberr
+WORKDIR /srv/www/viberr
+
+RUN mkdir -p /var/log/gunicorn && \
+    touch /var/log/gunicorn/migrations.log;
+
+# Перенос приложения
+COPY ./viberr /srv/www/viberr
+COPY ./scripts /srv/www/viberr
+
+# Установка зависимостей
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt;
+
+RUN chmod +x /srv/www/viberr/migrations.sh
+

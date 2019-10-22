@@ -14,15 +14,15 @@ spec:
         app: nginx                              # лейбл шаблона
     spec:
       volumes:                                  # запрос на получение хранилища
-      - name: media-storage
+      - name: media-volume
         persistentVolumeClaim:                  # заявка
           claimName: media-pvc                  # имя заявка $kubectl get pvc
       containers:
       - name: web-nginx                         # имя контейнера (вроде как DNS-имя)
         image: revolman/kube-nginx:v3
         volumeMounts:
-        - mountPath: "/srv/share/nginx/html/media"
-          name: media-storage
+        - mountPath: "/usr/share/nginx/html/media"
+          name: media-volume
         ports:
         - containerPort: 80                     # слушает 80 порт
           protocol: TCP

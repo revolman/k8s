@@ -14,7 +14,7 @@ spec:
         app: gunicorn                                   # лейбл шаблона
     spec:
       volumes:                                          # хранилища
-      - name: media-storage
+      - name: media-volume
         persistentVolumeClaim:                          # запрос на получение хранилища
           claimName: media-pvc
       containers:                                        # описание контейнера
@@ -22,7 +22,7 @@ spec:
         image: revolman/kube-django:v3
         volumeMounts:                                   # подключение запрошенного хранилища
         - mountPath: "/srv/www/viberr/media"            # точка монтирования
-          name: media-storage                           # имя хранилища
+          name: media-volume                           # имя хранилища
         ports:
         - containerPort: 8000
           protocol: TCP
@@ -30,7 +30,7 @@ spec:
         - name: "DB_PASSWORD"                           # Безопасная передача пароля БД
           valueFrom:                                    # Значение из
             secretKeyRef:                               # Secret
-              name: db-pass                             # ключ 
+              name: db-pass                             # ключ
               key: password                             # значение (key - тут как значение)
         envFrom:                                        # Взять остальные переменные из configmap "db_config"
         - configMapRef:

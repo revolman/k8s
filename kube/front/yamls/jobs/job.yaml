@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrations-job-v1
+  namespace: default
+spec:
+  template:
+    spec:
+      volumes:
+      - name: logs-volume
+        persistentVolumeClaim:
+          claimName: logs-pvc
+      containers:
+      - name: migrations-job
+        image: revolman/kube-job:v3
+        volumeMounts:
+        - mountPath: "/var/log/gunicorn/"
+          name: logs-volume
+        command: ["bash", "migrations.sh"]
+        envFrom:
+        - configMapRef:
+            name: db-config
+        env:
+        - name: "DB_PASSWORD"
+          valueFrom:
+           secretKeyRef:
+            name: db-pass
+            key: password
+      restartPolicy: Never
+  backoffLimit: 4
+
